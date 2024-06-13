@@ -33,12 +33,12 @@
           <p><strong>Numéro de carte:</strong> {{ item.attributes.numero_carte }}</p>
           <p><strong>Commentaire:</strong> {{ item.attributes.commentaire }}</p>
           <p><strong>Un fichier:</strong>
-            <a :href="'http://localhost:1337' + item.attributes.url" target="_blank">{{ item.attributes.url }}</a>
+            <a :href="item.attributes.url" target="_blank">{{ item.attributes.url }}</a>
           </p>
           <p><strong>Plusieurs fichiers:</strong></p>
           <ul>
             <li v-for="file in item.attributes.urlJSON" :key="file.id">
-              <a :href="'http://localhost:1337' + file" target="_blank">{{ file}}</a>
+              <a :href="file" target="_blank">{{ file }}</a>
             </li>
           </ul>
         </li>
@@ -129,11 +129,23 @@ export default {
         }
 
         console.log('FormData:', this.formData);
-        console.log('JSON : ', this.formData.urlJSON )
+        console.log('JSON : ', this.formData.urlJSON)
+
+        const submissionData = {
+          nom: this.formData.nom,
+          prenom: this.formData.prenom,
+          date_de_naissance: this.formData.date_de_naissance,
+          statut: this.formData.statut,
+          type_de_carte: this.formData.type_de_carte,
+          numero_carte: this.formData.numero_carte,
+          commentaire: this.formData.commentaire,
+          url: 'http://localhost:1337' + this.formData.url,
+          urlJSON: this.formData.urlJSON.map(url => 'http://localhost:1337' + url)
+        };
 
         // Submit the form data
         const response = await api.post('/p-r-velos', {
-          data: this.formData // formData already contains the file URL
+          data: submissionData // formData already contains the file URL
         });
 
         console.log('Response:', response);

@@ -1,5 +1,5 @@
 <script setup>
-import FormEditor from './components/forms/PRVelo.vue'
+import PRVelo from './components/forms/PRVelo.vue'
 </script>
 <template>
   <div>
@@ -7,7 +7,7 @@ import FormEditor from './components/forms/PRVelo.vue'
       <h1>Form test</h1>
     </header>
     <main>
-      <FormEditor />
+      <PRVelo />
     </main>
   </div>
 </template>
