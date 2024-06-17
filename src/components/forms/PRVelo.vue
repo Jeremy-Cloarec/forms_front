@@ -33,12 +33,12 @@
           <p><strong>Numéro de carte:</strong> {{ item.attributes.numero_carte }}</p>
           <p><strong>Commentaire:</strong> {{ item.attributes.commentaire }}</p>
           <p><strong>Un fichier:</strong>
-            <a :href="item.attributes.url" target="_blank">{{ item.attributes.url }}</a>
+            <a :href="'http://localhost:1337' + item.attributes.fichier.data.attributes.url" target="_blank">{{ item.attributes.fichier.data.attributes.url }}</a>
           </p>
           <p><strong>Plusieurs fichiers:</strong></p>
           <ul>
-            <li v-for="file in item.attributes.urlJSON" :key="file.id">
-              <a :href="file" target="_blank">{{ file }}</a>
+            <li v-for="file in item.attributes.fichiers.data" :key="file.id">
+              <a :href="'http://localhost:1337' + file.attributes.url" target="_blank">{{ file.attributes.name }}</a>
             </li>
           </ul>
         </li>
@@ -66,8 +66,6 @@ export default {
         commentaire: '',
         file: null,
         multipleFiles: [],
-        url: '',
-        urlJSON: []
       },
       fetchedData: [],
       error: null,
@@ -106,7 +104,6 @@ export default {
           });
 
           if (fileUploadResponse.data && fileUploadResponse.data.length > 0) {
-            this.formData.url = fileUploadResponse.data[0].url; // Update formData with the file URL
             this.formData.file = fileUploadResponse.data[0].id; // Update formData with the file id
             console.log('File id:', this.formData.id);
           }
@@ -126,7 +123,6 @@ export default {
           });
 
           if (multipleFilesUploadResponse.data && multipleFilesUploadResponse.data.length > 0) {
-            this.formData.urlJSON = multipleFilesUploadResponse.data.map(file => file.url); // Get the URLs of the uploaded files
             this.formData.multipleFiles = multipleFilesUploadResponse.data.map(file => file.id); // Get the ids of the uploaded files
           }
         }
@@ -142,8 +138,6 @@ export default {
           type_de_carte: this.formData.type_de_carte,
           numero_carte: this.formData.numero_carte,
           commentaire: this.formData.commentaire,
-          url: 'http://localhost:1337' + this.formData.url,
-          urlJSON: this.formData.urlJSON.map(url => 'http://localhost:1337' + url),
           fichier: this.formData.file,
           fichiers: this.formData.multipleFiles
         };
