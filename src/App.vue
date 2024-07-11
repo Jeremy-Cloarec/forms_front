@@ -1,16 +1,17 @@
-<script setup>
-import PRVelo from './components/forms/PRVelo.vue'
-</script>
 <template>
-  <div>
-    <header>
-      <h1>Form test</h1>
-    </header>
-    <main>
-      <PRVelo />
-    </main>
-  </div>
+  <header>
+    <h1>Form builder</h1>
+  </header>
+  <main>
+    <FormBuilder />
+  </main>
 </template>
+
+<script setup>
+
+import FormBuilder from './components/FormBuilder.vue';
+
+</script>
 
 <style scoped>
 header {
@@ -18,7 +19,9 @@ header {
   justify-content: center;
   gap: 1.5em;
 }
+
 main {
-  padding: 2em;
+  flex: 1;
+  width: 100%;
 }
 </style>
