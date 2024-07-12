@@ -1,28 +1,16 @@
-<template>
-    <div class="form-container">
-        <div class="add-field">
-            <button @click="addField('text')">Add Text Field</button>
-            <button @click="addField('textarea')">Add Textarea</button>
-            <button @click="addField('select')">Add Select</button>
-        </div>
-        <div class="building-form">
-            <form @submit.prevent="handleSubmit">
-                <div class="input-container" v-for="(field, index) in fields" :key="index">
-                    <component :is="field.component" :field="field" @remove="removeField(index)" />
-                </div>
-                <button v-if="fields.length > 0" class="submit-form" type="submit">Submit</button>
-                <p v-else>No fields added</p>
-            </form>
-        </div>
-    </div>
-</template>
-
 <script setup>
 import { ref } from 'vue';
 import { markRaw } from 'vue';
-import TextField from './inputs/TextField.vue';
-import TextareaField from './inputs/TextareaField.vue';
-import SelectField from './inputs/SelectField.vue';
+import TextField from '../inputs/TextField.vue';
+import TextareaField from '../inputs/TextareaField.vue';
+import SelectField from '../inputs/SelectField.vue';
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const goToAdmin = () => {
+    router.push('/admin')
+}
 
 // Utiliser ref pour la réactivité
 const fields = ref([]);
@@ -56,6 +44,26 @@ function handleSubmit() {
     console.log(fields.value);
 }
 </script>
+
+<template>
+    <button @click="goToAdmin">Return to admin</button>
+    <div class="form-container">
+        <div class="add-field">
+            <button @click="addField('text')">Add Text Field</button>
+            <button @click="addField('textarea')">Add Textarea</button>
+            <button @click="addField('select')">Add Select</button>
+        </div>
+        <div class="building-form">
+            <form @submit.prevent="handleSubmit">
+                <div class="input-container" v-for="(field, index) in fields" :key="index">
+                    <component :is="field.component" :field="field" @remove="removeField(index)" />
+                </div>
+                <button v-if="fields.length > 0" class="submit-form" type="submit">Submit</button>
+                <p v-else>No fields added</p>
+            </form>
+        </div>
+    </div>
+</template>
 
 <style scoped>
 .submit-form {

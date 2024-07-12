@@ -1,17 +1,17 @@
+<script setup>
+import { RouterLink } from 'vue-router';
+import HomePublic from './components/public/HomePublic.vue';
+</script>
+
 <template>
-  <header>
-    <h1>Form builder</h1>
-  </header>
+  <nav>
+    <RouterLink to="/">Home</RouterLink>
+    <RouterLink to="/admin">Admin</RouterLink>
+  </nav>
   <main>
-    <FormBuilder />
+    <RouterView/>
   </main>
 </template>
-
-<script setup>
-
-import FormBuilder from './components/FormBuilder.vue';
-
-</script>
 
 <style scoped>
 header {
