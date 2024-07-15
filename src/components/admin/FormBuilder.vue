@@ -36,17 +36,36 @@ function removeField(index) {
     fields.value.splice(index, 1);
 }
 
+// Fonction pour écrire un fichier sur le serveur Node.js
+async function writeToFile(formId) {
+    const content = `
+    <template>
+        <div>
+            <h1>${formName.value}</h1>
+            <!-- Add your form fields here -->
+        </div>
+    </template>
+    `;
+
+    try {
+        const response = await axios.post('http://localhost:4000/write-file', { formId, content });
+        console.log(response.data);
+    } catch (err) {
+        console.error('Error writing file:', err);
+    }
+}
+
 // Gérer la soumission du formulaire
 async function handleSubmit() {
     try {
         const response = await axios.post('http://localhost:1337/api/forms', {
-            
+
             data: {
                 name: formName.value,
                 fields: fields.value.map(field => {
                     return {
                         inputType: field.component.__name,
-                        label : field.label,
+                        label: field.label,
                     };
                 })
             }
@@ -55,7 +74,13 @@ async function handleSubmit() {
             console.error('Error saving form: ', response.data);
             return;
         }
+
+        const formId = response.data.data.id;
         console.log(response.data.data.attributes);
+
+        // Écrire le fichier après la soumission du formulaire
+        await writeToFile(formId);
+
     } catch (error) {
         console.error('Error saving form:', error);
     }

@@ -32,8 +32,9 @@ fetchForm();
 </script>
 
 <template>
-    <h1>Form test</h1>
+    <h1>{{forms.attributes.name}}</h1>
     <div>
+
         <ul v-if="forms && forms.attributes && forms.attributes.fields" v-for="field in forms.attributes.fields">
             <li v-if="field.inputType ==='TextField'">
                 <label for="">
