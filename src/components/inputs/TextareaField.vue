@@ -7,7 +7,7 @@ const props = defineProps({
 
 <template>
     <div class="container-textarea field">
-        <label>Textarea:</label>
+        <label>{{ field.label }}</label>
         <textarea v-model="field.value"></textarea>
         <RemoveButton @remove="$emit('remove')" />
     </div>

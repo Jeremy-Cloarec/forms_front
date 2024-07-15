@@ -15,7 +15,7 @@ onMounted(() => {
 
 <template>
     <div class="container-select field">
-        <label>Select Field:</label>
+        <label>{{ field.label }}</label>
         <select v-model="field.value">
             <option v-for="option in field.options" :key="option" :value="option">{{ option }}</option>
         </select>

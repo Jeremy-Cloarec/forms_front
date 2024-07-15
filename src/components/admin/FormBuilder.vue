@@ -13,6 +13,8 @@ const fields = ref([]);
 // Ajouter un champ
 function addField(type) {
     let component;
+    let label = prompt("Enter label for the field:"); // Prompt user for the label
+    if (!label) return;
     switch (type) {
         case 'text':
             component = markRaw(TextField);
@@ -26,7 +28,7 @@ function addField(type) {
         default:
             return;
     }
-    fields.value.push({ component });
+    fields.value.push({ component, label, value: '' });
 }
 
 // Supprimer un champ
@@ -35,24 +37,30 @@ function removeField(index) {
 }
 
 // Gérer la soumission du formulaire
-function handleSubmit() {
-    console.log('Form submitted' + JSON.stringify(fields.value));
-    console.log('Form name: ' + formName.value);
-    console.log('Fields: ' + fields.value.map(field => JSON.stringify(field.component.__name)));
-
-    axios.post('http://localhost:1337/api/forms', {
-        data: {
-            name: formName.value,
-            fields: fields.value.map(field => {
-                return { inputType: field.component.__name };
-            })
+async function handleSubmit() {
+    try {
+        const response = await axios.post('http://localhost:1337/api/forms', {
+            
+            data: {
+                name: formName.value,
+                fields: fields.value.map(field => {
+                    return {
+                        inputType: field.component.__name,
+                        label : field.label,
+                    };
+                })
+            }
+        });
+        if (!response.data.data) {
+            console.error('Error saving form: ', response.data);
+            return;
         }
-    }).then(response => {
-        console.log(response.data.message);
-    }).catch(error => {
+        console.log(response.data.data.attributes);
+    } catch (error) {
         console.error('Error saving form:', error);
-    });
+    }
 }
+
 </script>
 
 <template>
@@ -64,7 +72,9 @@ function handleSubmit() {
         </div>
         <div class="building-form">
             <form @submit.prevent="handleSubmit">
-                <input type="text" v-model="formName" placeholder="Form Name" />
+                <div class="form-name">
+                    <input type="text" v-model="formName" placeholder="Form Name" />
+                </div>
                 <div class="input-container" v-for="(field, index) in fields" :key="index">
                     <component :is="field.component" :field="field" @remove="removeField(index)" />
                 </div>

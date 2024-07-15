@@ -43,7 +43,6 @@ nav {
   align-items: center;
   justify-content: center;
   padding: 16px;
-  background-color: #f1f1ff;
 }
 
 button {
@@ -77,7 +76,7 @@ button:focus-visible {
 .field input,
 .field textarea {
   display: flex;
-  height: 48px;
+
   padding: 12px;
   width: -webkit-fill-available;
   border-radius: 8px;
@@ -85,6 +84,22 @@ button:focus-visible {
 
 .field input {
   border: 1px solid #000
+}
+
+.form-name {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.form-name input {
+  border: none;
+  border-bottom: #000 solid 1px;
+  text-align: center;
+  font-size: 1.5em;
+}
+.form-name input:focus {
+  outline: none;
 }
 
 #app {
@@ -95,5 +110,3 @@ button:focus-visible {
   flex-direction: column;
   width: 100%;
 }
-
-

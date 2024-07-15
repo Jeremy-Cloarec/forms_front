@@ -1,5 +1,6 @@
 <script setup>
 import RemoveButton from './remove/RemoveButton.vue';
+
 const props = defineProps({
     field: Object
 });
@@ -7,7 +8,7 @@ const props = defineProps({
 
 <template>
     <div class="container-text-field field">
-        <label>Text Field:</label>
+        <label>{{ field.label }}</label>
         <input type="text" v-model="field.value" />
         <RemoveButton @remove="$emit('remove')" />
     </div>
