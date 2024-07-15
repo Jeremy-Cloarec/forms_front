@@ -1,6 +1,5 @@
 <script setup>
 import { RouterLink } from 'vue-router';
-import HomePublic from './components/public/HomePublic.vue';
 </script>
 
 <template>

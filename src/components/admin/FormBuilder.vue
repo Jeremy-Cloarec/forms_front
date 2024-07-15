@@ -4,13 +4,8 @@ import { markRaw } from 'vue';
 import TextField from '../inputs/TextField.vue';
 import TextareaField from '../inputs/TextareaField.vue';
 import SelectField from '../inputs/SelectField.vue';
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
-
-const goToAdmin = () => {
-    router.push('/admin')
-}
+import axios from 'axios';
+const formName = ref('');
 
 // Utiliser ref pour la réactivité
 const fields = ref([]);
@@ -41,12 +36,26 @@ function removeField(index) {
 
 // Gérer la soumission du formulaire
 function handleSubmit() {
-    console.log(fields.value);
+    console.log('Form submitted' + JSON.stringify(fields.value));
+    console.log('Form name: ' + formName.value);
+    console.log('Fields: ' + fields.value.map(field => JSON.stringify(field.component.__name)));
+
+    axios.post('http://localhost:1337/api/forms', {
+        data: {
+            name: formName.value,
+            fields: fields.value.map(field => {
+                return { inputType: field.component.__name };
+            })
+        }
+    }).then(response => {
+        console.log(response.data.message);
+    }).catch(error => {
+        console.error('Error saving form:', error);
+    });
 }
 </script>
 
 <template>
-    <button @click="goToAdmin">Return to admin</button>
     <div class="form-container">
         <div class="add-field">
             <button @click="addField('text')">Add Text Field</button>
@@ -55,6 +64,7 @@ function handleSubmit() {
         </div>
         <div class="building-form">
             <form @submit.prevent="handleSubmit">
+                <input type="text" v-model="formName" placeholder="Form Name" />
                 <div class="input-container" v-for="(field, index) in fields" :key="index">
                     <component :is="field.component" :field="field" @remove="removeField(index)" />
                 </div>

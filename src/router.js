@@ -1,8 +1,8 @@
-import { createMemoryHistory, createRouter } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 import HomeAdmin from "./components/admin/HomeAdmin.vue";
 import FormBuilder from "./components/admin/FormBuilder.vue";
-import Form1 from "./components/public/Form1.vue";
+import Form1 from "./components/public/forms/Form1.vue";
 import HomePublic from "./components/public/HomePublic.vue";
 
 const routes = [
@@ -13,7 +13,7 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createMemoryHistory(),
+    history: createWebHistory(),
     routes,
 })
 
