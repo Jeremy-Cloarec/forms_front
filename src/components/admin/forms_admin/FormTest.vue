@@ -1,9 +1,6 @@
 <script setup>
 import axios from 'axios';
 import { ref } from 'vue';
-import SelectField from '../../inputs/SelectField.vue';
-import TextField from '../../inputs/TextField.vue';
-import TextareaField from '../../inputs/TextareaField.vue';
 
 const id = 33;
 const forms = ref(null);

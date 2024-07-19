@@ -5,7 +5,7 @@ import TextField from '../inputs/TextField.vue';
 import TextareaField from '../inputs/TextareaField.vue';
 import SelectField from '../inputs/SelectField.vue';
 import axios from 'axios';
-const formName = ref('');
+let formName = ref('');
 
 // Utiliser ref pour la réactivité
 const fields = ref([]);
@@ -48,7 +48,7 @@ async function writeToFile(formId) {
     `;
 
     try {
-        const response = await axios.post('http://localhost:4000/write-file', { formId, content });
+        const response = await axios.post('http://localhost:4000/write-file', { formId, content, formName: formName.value });
         console.log(response.data);
     } catch (err) {
         console.error('Error writing file:', err);
@@ -76,6 +76,9 @@ async function handleSubmit() {
         }
 
         const formId = response.data.data.id;
+        formName.value = response.data.data.attributes.name;
+        console.log('Form saved:', formId, formName);
+
         console.log(response.data.data.attributes);
 
         // Écrire le fichier après la soumission du formulaire
