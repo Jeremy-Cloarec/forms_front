@@ -23,17 +23,21 @@ async function updateFile(filePath, referenceIndex, replaceContent) {
     const insertPosition = data.lastIndexOf(referenceIndex);
     // Si la position est trouvée, insérer le nouveau contenu
     if (insertPosition !== -1) {
+        console.log('Insertion position:', insertPosition);
         const before = data.slice(0, insertPosition);
         const after = data.slice(insertPosition);
 
         const updatedData = before + replaceContent + after;
         await fs.writeFile(filePath, updatedData, 'utf-8')
+    } else {
+        console.error('Reference index not found:', reference);
     }
 }
 
 app.post('/write-file', async (req, res) => {
     const { formId, formName } = req.body;
     let fileName = `${formId}-${formName.replace(/\s+/g, '-').toLowerCase()}`;
+    const insertAbove = "<!-- insert above -->";
 
     // Définir les chemins des fichiers
     const newFormFilePath = path.join(__dirname, 'src/components/admin/forms_admin', `${fileName}.vue`);
@@ -53,12 +57,19 @@ app.post('/write-file', async (req, res) => {
         console.log(`Le fichier ${fileName} a été créé avec succès`);
 
         // Mettre à jour le fichier router.js
-        await updateFile(routerFilePath, '// Les nouvelles routes seront ajoutées au-dessus de cette ligne', newRoute);
+        await updateFile(
+            routerFilePath,
+            '// insert above',
+            newRoute
+        );
 
         // Mettre à jour le fichier HomeAdmin.vue
-        await updateFile(adminHomFilePath, ' <!-- Les boutons vers les nouveau formulaire sont ajoutés au-dessus de cette lignes -->', newButton);
+        await updateFile(
+            adminHomFilePath,
+            "<!-- insert above -->",
+            newButton
+        );
 
-        res.status(200).send(`Formulaire ${formName} créé et routes mises à jour.`);
     } catch (err) {
         console.error('Error writing file:', err);
         return res.status(500).send('Error writing file');

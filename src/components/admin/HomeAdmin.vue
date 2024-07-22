@@ -17,7 +17,10 @@ const goToFormBuilder = () => {
         <div class="container-news-forms">
             <h2>News forms</h2>
 
-            <!-- Les boutons vers les nouveau formulaire sont ajoutés au-dessus de cette lignes -->
+
+
+            <button @click="router.push('/admin/152-hello')">Go to Hello</button>
+<!-- insert above -->
         </div>
     </div>
 </template>
