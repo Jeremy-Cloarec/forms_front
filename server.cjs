@@ -8,11 +8,14 @@ const port = 4000;
 app.use(bodyParser.json());
 app.use(cors());
 
-const fileContent = require('./fileContent.cjs');
-console.log(fileContent);
+const fileContent = require('./backend_files/fileContent.cjs');
+
+app.get('/', (req, res)=> {
+    res.send('Hello on the form buider project')
+})
 
 app.post('/write-file', async (req, res) => {
-    const { formId, formName, content } = req.body;
+    const { formId, formName } = req.body;
     let fileName = `${formId}-${formName.replace(/\s+/g, '-').toLowerCase()}`;
 
     // Définir chemin et contenu du fichier
@@ -23,8 +26,7 @@ app.post('/write-file', async (req, res) => {
     // Route à ajouter
     const newRoute = `\n    { path: "/admin/${fileName}", component: () => import("./components/admin/forms_admin/${fileName}.vue") },`;
 
-    const generateFileContent = fileContent(formName,formId);
-    
+    const generateFileContent = fileContent(formId);
 
     try {
         // Créer le fichier du nouveau formulaire
@@ -58,7 +60,7 @@ app.post('/write-file', async (req, res) => {
             const afterAdmin = dataHomeAdmin.slice(insertPositionHomeAdmin);
 
             const newButton = `
-                <button @click="router.push('/admin/${fileName}')">Go to ${fileName}</button>
+                <button @click="router.push('/admin/${fileName}')">Go to ${formName}</button>
             `;
             const updatedHomeAdmin = beforeAdmin + newButton + afterAdmin;
             await fs.writeFile(adminHomFilePath, updatedHomeAdmin, 'utf-8');
