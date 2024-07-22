@@ -12,10 +12,6 @@ const goToFormTest = () => {
     router.push('/admin/form-test')
 }
 
-const goToForm45 = () => {
-    router.push('/admin/form45')
-}
-
 </script>
 
 <template>
@@ -23,6 +19,11 @@ const goToForm45 = () => {
         <h1>Admin Home</h1>
         <button @click="goToFormBuilder">Go to form builder</button>
         <button @click="goToFormTest">Go to form test</button>
-        <button @click="goToForm45">Go to form 45</button>
+
+       
+                <button @click="router.push('/admin/107-aa')">Go to 107-aa</button>
+            
+                <button @click="router.push('/admin/109-yy')">Go to 109-yy</button>
+             <!-- Add button to new form befor this line -->
     </div>
 </template>
