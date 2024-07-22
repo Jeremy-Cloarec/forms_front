@@ -8,7 +8,7 @@ const port = 4000;
 app.use(bodyParser.json());
 app.use(cors());
 
-const fileContent = require('./backend_files/fileContent.cjs');
+const fileContent = require('./backend_fs/fileContent.cjs');
 
 app.get('/', (req, res)=> {
     res.send('Hello on the form buider project')
