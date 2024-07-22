@@ -2,12 +2,8 @@
 import axios from 'axios';
 import { ref } from 'vue';
 
-const id = 33;
+const id = 105;
 const forms = ref(null);
-
-function generateForm(typeForm) {
-    console.log(typeForm);
-}
 
 async function fetchForm() {
     try {

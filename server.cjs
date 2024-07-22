@@ -8,6 +8,9 @@ const port = 4000;
 app.use(bodyParser.json());
 app.use(cors());
 
+const fileContent = require('./fileContent.cjs');
+console.log(fileContent);
+
 app.post('/write-file', async (req, res) => {
     const { formId, formName, content } = req.body;
     let fileName = `${formId}-${formName.replace(/\s+/g, '-').toLowerCase()}`;
@@ -20,38 +23,12 @@ app.post('/write-file', async (req, res) => {
     // Route à ajouter
     const newRoute = `\n    { path: "/admin/${fileName}", component: () => import("./components/admin/forms_admin/${fileName}.vue") },`;
 
-    const fileContent = `
-    <template>
-        <div>
-            <h1>${formName}</h1>
-            <!-- Contenu du formulaire -->
-        </div>
-    </template>
-
-    <script setup>
-    import { ref, onMounted } from 'vue';
-    import axios from 'axios';
-
-    const form = ref(null);
-
-    async function fetchForm() {
-        try {
-            const response = await axios.get('http://localhost:1337/api/forms/${formId}');
-            form.value = response.data.data;
-            console.log(form.value);
-        } catch (error) {
-            console.error('Error fetching form:', error);
-        }
-    }
-
-    onMounted(fetchForm);
-    </script>
-    `;
-
+    const generateFileContent = fileContent(formName,formId);
+    
 
     try {
         // Créer le fichier du nouveau formulaire
-        await fs.writeFile(filePath, fileContent);
+        await fs.writeFile(filePath, generateFileContent);
         console.log(`Le fichier ${fileName} a été créé avec succès`);
 
         // Lire le fichier router.js

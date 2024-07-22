@@ -22,6 +22,10 @@ const routes = [
     { path: "/admin/107-aa", component: () => import("./components/admin/forms_admin/107-aa.vue") },
 
     { path: "/admin/109-yy", component: () => import("./components/admin/forms_admin/109-yy.vue") },
+
+    { path: "/admin/111-lolo", component: () => import("./components/admin/forms_admin/111-lolo.vue") },
+
+    { path: "/admin/112-ww", component: () => import("./components/admin/forms_admin/112-ww.vue") },
 ]
 
 const router = createRouter({
