@@ -81,9 +81,6 @@ async function handleSubmit() {
 
         console.log(response.data.data.attributes);
 
-        // Écrire le fichier après la soumission du formulaire
-        await writeToFile(formId);
-
     } catch (error) {
         console.error('Error saving form:', error);
     }

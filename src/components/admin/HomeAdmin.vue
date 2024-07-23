@@ -1,33 +1,55 @@
 <script setup>
-
 import { useRouter } from 'vue-router'
+import axios from 'axios'
+import { ref, onMounted } from 'vue'
 
 const router = useRouter()
 
 const goToFormBuilder = () => {
     router.push('/admin/form-builder')
 }
+
+const forms = ref([]);
+
+const fetchForm = async () => {
+    try {
+        const response = await axios.get('http://localhost:1337/api/forms');
+        if (!response.data.data) {
+            console.error('Form not found:', response.data);
+            return;
+        }
+        forms.value = response.data.data;
+        console.log(forms.value);
+    } catch (error) {
+        console.error('Error fetching form:', error);
+    }
+};
+
+onMounted(fetchForm);
+
+console.log('forms', forms.value);
 </script>
 
 <template>
     <div class="container-admin">
-        <h1>Admin Home</h1>
-        <button @click="goToFormBuilder" class="form-builder">Go to form builder
-        </button>
+        <h1>Accueil admin</h1>
+        <button @click="goToFormBuilder" class="form-builder">Go to form builder</button>
         <div class="container-news-forms">
-            <h2>News forms</h2>
+            <h2>Vos formulaires</h2>
 
-
-
-            <button @click="router.push('/admin/152-hello')">Go to Hello</button>
-<!-- insert above -->
+            <div v-if="forms && forms.length > 0" v-for="form in forms" :key="form.id">
+                <button @click="router.push(`/admin/form-test/${form.id}`)">{{ form.attributes.name }}</button>
+            </div>
+            <div v-else>
+                <p>Vous n'avez pas encore de formulaires</p>
+            </div>
         </div>
     </div>
 </template>
 
 <style>
 .container-admin {
-    padding: 16px
+    padding: 16px;
 }
 
 .form-builder {
