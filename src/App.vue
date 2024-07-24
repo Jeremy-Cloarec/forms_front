@@ -4,8 +4,7 @@ import { RouterLink } from 'vue-router';
 
 <template>
   <nav>
-    <RouterLink to="/">Publique</RouterLink>
-    <RouterLink to="/admin">Admin</RouterLink>
+    <RouterLink to="/">Accueil</RouterLink>
   </nav>
   <main>
     <RouterView/>
