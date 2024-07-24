@@ -33,12 +33,12 @@ console.log('forms', forms.value);
 <template>
     <div class="container-admin">
         <h1>Accueil admin</h1>
-        <button @click="goToFormBuilder" class="form-builder">Go to form builder</button>
+        <button @click="goToFormBuilder" class="form-builder">Générateur de formulaires</button>
         <div class="container-news-forms">
             <h2>Vos formulaires</h2>
 
             <div v-if="forms && forms.length > 0" v-for="form in forms" :key="form.id">
-                <button @click="router.push(`/admin/form-test/${form.id}`)">{{ form.attributes.name }}</button>
+                <button @click="router.push(`/admin/form-admin/${form.id}`)">{{ form.attributes.name }}</button>
             </div>
             <div v-else>
                 <p>Vous n'avez pas encore de formulaires</p>

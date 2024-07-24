@@ -1,5 +1,5 @@
 <template>
-    <button @click="handleClick">Remove</button>
+    <button @click="handleClick">Supprimer le champ</button>
 </template>
 
 <script setup>

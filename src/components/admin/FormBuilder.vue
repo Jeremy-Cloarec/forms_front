@@ -13,7 +13,7 @@ const fields = ref([]);
 // Ajouter un champ
 function addField(type) {
     let component;
-    let label = prompt("Enter label for the field:"); // Prompt user for the label
+    let label = prompt("Entrez un label:"); // Prompt user for the label
     if (!label) return;
     switch (type) {
         case 'text':
@@ -34,25 +34,6 @@ function addField(type) {
 // Supprimer un champ
 function removeField(index) {
     fields.value.splice(index, 1);
-}
-
-// Fonction pour écrire un fichier sur le serveur Node.js
-async function writeToFile(formId) {
-    const content = `
-    <template>
-        <div>
-            <h1>${formName.value}</h1>
-            <!-- Add your form fields here -->
-        </div>
-    </template>
-    `;
-
-    try {
-        const response = await axios.post('http://localhost:4000/write-file', { formId, content, formName: formName.value });
-        console.log(response.data);
-    } catch (err) {
-        console.error('Error writing file:', err);
-    }
 }
 
 // Gérer la soumission du formulaire
@@ -91,20 +72,20 @@ async function handleSubmit() {
 <template>
     <div class="form-container">
         <div class="add-field">
-            <button @click="addField('text')">Add Text Field</button>
-            <button @click="addField('textarea')">Add Textarea</button>
-            <button @click="addField('select')">Add Select</button>
+            <button @click="addField('text')">Input text</button>
+            <button @click="addField('textarea')">Textarea</button>
+            <button @click="addField('select')">Select</button>
         </div>
         <div class="building-form">
             <form @submit.prevent="handleSubmit">
                 <div class="form-name">
-                    <input type="text" v-model="formName" placeholder="Form Name" />
+                    <input type="text" v-model="formName" placeholder="Nom du formulaire" />
                 </div>
                 <div class="input-container" v-for="(field, index) in fields" :key="index">
                     <component :is="field.component" :field="field" @remove="removeField(index)" />
                 </div>
-                <button v-if="fields.length > 0" class="submit-form" type="submit">Submit</button>
-                <p v-else>No fields added</p>
+                <button v-if="fields.length > 0" class="submit-form" type="submit">Enregistrer le formulaire</button>
+                <p v-else>Ajouter un champ</p>
             </form>
         </div>
     </div>
