@@ -5,11 +5,32 @@ import api from '../api';
 import { capitalizeFirstLetter } from '../utils/capitalizeFirstLetter';
 import InputText from './inputs/InputText.vue';
 import InputTextarea from './inputs/InputTextarea.vue';
+import InputEmail from './inputs/InputEmail.vue';
 
 const forms = ref(null);
 const formData = ref({});
 const route = useRoute();
 const uid = route.params.id;
+
+const labelObject = {
+    name: 'Votre nom',
+    surname: 'Votre prénom',
+    email: 'Votre email',
+    message: 'Votre message'
+}
+
+const placeholderObject = {
+    name: 'Entrez votre nom',
+    surname: 'Entrez votre prénom',
+    email: 'Entrez votre email',
+    message: 'Entrez votre message'
+}
+
+const componentMap = {
+    'input-textarea': InputTextarea,
+    'input-email': InputEmail,
+    'input-text': InputText
+};
 
 async function fetchForm() {
     try {
@@ -33,19 +54,44 @@ async function fetchForm() {
 
 fetchForm();
 
-// Function to get the component type based on the name
 const getComponentType = (component) => {
-    if (component.includes('input-text')) {
-        return InputText;
-    } else if (component.includes('input-textarea')) {
-        return InputTextarea;
+    // Cherchez la clé dans l'objet de mappage qui est incluse dans le nom du composant
+    for (const key in componentMap) {
+
+        if (component.includes(key)) {
+            return componentMap[key];
+        }
     }
-    return 'input'; // default to input if type is unknown
+    // Retour par défaut si le type de composant est inconnu
+    return 'input';
+};
+
+const getLabel = (component) => {
+    const componentKey = component.split('.')[1];
+    console.log('component:', component, 'componentKey:', componentKey);
+    for (const key in labelObject) {
+        console.log('componentKey:', componentKey, 'key:', key);
+        if (componentKey && componentKey === key) {
+            return labelObject[key];
+        }
+    }
+    return '';
+};
+
+const getPlaceholder = (component) => {
+    const componentKey = component.split('.')[1];
+    for (const key in placeholderObject) {
+        if (componentKey && componentKey === key) {
+            return placeholderObject[key];
+        }
+    }
+    return '';
 };
 
 const handleSubmit = () => {
     console.log('Form Data:', formData.value);
 };
+
 </script>
 
 <template>
@@ -54,15 +100,15 @@ const handleSubmit = () => {
             forms.apiID
                 .split('-')
                 .slice(1)
-                .toString()
-        ) }}
+                .toString())
+        }}
     </h1>
     <div class="container-form" v-if="forms">
         <form class="form-public" @submit.prevent="handleSubmit">
-            <div v-for="(field, index) in forms.schema.attributes.input.components" :key="index">
-                <div class="container-input">
-                    <component :is="getComponentType(field)" v-model="formData[field]" :placeholder="field" />
-                </div>
+            <div class="container-input" v-for="(field, index) in forms.schema.attributes.input.components"
+                :key="index">
+                <component :is="getComponentType(field)" v-model="formData[field]" :label="getLabel(field)"
+                    :placeholder="getPlaceholder(field)" />
             </div>
             <input type="submit" value="Envoyer">
         </form>

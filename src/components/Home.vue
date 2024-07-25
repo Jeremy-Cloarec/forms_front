@@ -8,10 +8,6 @@ const router = useRouter()
 
 let contentTypes = ref([]);
 
-// function capitalizeFirstLetter(string) {
-//     return string.charAt(0).toUpperCase() + string.slice(1);
-// }
-
 const fetchContentType = async () => {
     try {
         const response = await api.get('/content-type-builder/content-types');
