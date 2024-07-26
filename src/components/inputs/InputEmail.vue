@@ -1,6 +1,4 @@
 <script setup>
-import { computed } from 'vue';
-
 const props = defineProps({
     modelValue: {
         type: String,
@@ -14,13 +12,13 @@ const props = defineProps({
         type: String,
         default: '',
     },
+    componentId: {
+        type: String,
+        default:''
+    }
 });
 
 const emit = defineEmits(['update:modelValue']);
-
-// const componentId = computed(() => {
-//     return props.label.replace(/\s+/g, '-').toLowerCase();
-// });
 
 const updateValue = (event) => {
     emit('update:modelValue', event.target.value);

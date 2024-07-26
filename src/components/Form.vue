@@ -1,35 +1,25 @@
 <script setup>
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import api from '../api';
 import { capitalizeFirstLetter } from '../utils/capitalizeFirstLetter';
+import { labelObject, placeHolderObject } from './inputs/data_input/dataInput';
+import api from '../api';
 import InputText from './inputs/InputText.vue';
 import InputTextarea from './inputs/InputTextarea.vue';
 import InputEmail from './inputs/InputEmail.vue';
+import InputNumber from './inputs/InputNumber.vue';
 
 const forms = ref(null);
-const formData = ref({});
+const inputType = ref({});
 const route = useRoute();
 const uid = route.params.id;
-
-const labelObject = {
-    name: 'Votre nom',
-    surname: 'Votre prénom',
-    email: 'Votre email',
-    message: 'Votre message'
-}
-
-const placeholderObject = {
-    name: 'Entrez votre nom',
-    surname: 'Entrez votre prénom',
-    email: 'Entrez votre email',
-    message: 'Entrez votre message'
-}
+const apiID = ref(null)
 
 const componentMap = {
     'input-textarea': InputTextarea,
     'input-email': InputEmail,
-    'input-text': InputText
+    'input-text': InputText,
+    'input-number': InputNumber
 };
 
 async function fetchForm() {
@@ -43,8 +33,12 @@ async function fetchForm() {
 
         // Initialize formData with empty strings for each component
         forms.value.schema.attributes.input.components.forEach(component => {
-            formData.value[component] = '';
+            inputType.value[component] = '';
+            console.log(inputType);
         });
+
+        apiID.value = response.data.data.apiID
+        console.log(apiID.value);
 
         console.log(forms.value);
     } catch (error) {
@@ -57,7 +51,6 @@ fetchForm();
 const getComponentType = (component) => {
     // Cherchez la clé dans l'objet de mappage qui est incluse dans le nom du composant
     for (const key in componentMap) {
-
         if (component.includes(key)) {
             return componentMap[key];
         }
@@ -68,9 +61,7 @@ const getComponentType = (component) => {
 
 const getLabel = (component) => {
     const componentKey = component.split('.')[1];
-    console.log('component:', component, 'componentKey:', componentKey);
     for (const key in labelObject) {
-        console.log('componentKey:', componentKey, 'key:', key);
         if (componentKey && componentKey === key) {
             return labelObject[key];
         }
@@ -80,17 +71,52 @@ const getLabel = (component) => {
 
 const getPlaceholder = (component) => {
     const componentKey = component.split('.')[1];
-    for (const key in placeholderObject) {
+    for (const key in placeHolderObject) {
         if (componentKey && componentKey === key) {
-            return placeholderObject[key];
+            return placeHolderObject[key];
         }
     }
     return '';
 };
 
-const handleSubmit = () => {
-    console.log('Form Data:', formData.value);
-};
+async function handleSubmit() {
+
+    const data = forms.value.schema.attributes.input.components.map(component => {
+        return {
+            "__component": component,
+            component: inputType.value // Spread operator to include dynamic fields
+        }
+    })
+    console.log(data);
+
+    try {
+        // Collect data in the required format
+        console.log(forms.value.schema.attributes.input.components);
+        const formData = {
+            "data": {
+                "input": [
+                    {
+                        "__component": "input-text.name",
+                        "name": "John "
+                    },
+                    {
+                        "__component": "input-text.surname",
+                        "surname": "Doe"
+                    }
+                ]
+            }
+        }
+
+        const response = await api.post(`${apiID.value}s?populate=*`, formData, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        console.log("Response: ", response);
+    } catch (error) {
+        console.error('Error submitting form:', error);
+    }
+}
 
 </script>
 
@@ -107,8 +133,8 @@ const handleSubmit = () => {
         <form class="form-public" @submit.prevent="handleSubmit">
             <div class="container-input" v-for="(field, index) in forms.schema.attributes.input.components"
                 :key="index">
-                <component :is="getComponentType(field)" v-model="formData[field]" :label="getLabel(field)"
-                    :placeholder="getPlaceholder(field)" />
+                <component :is="getComponentType(field)" v-model="inputType[field]" :componentId="field"
+                    :label="getLabel(field)" :placeholder="getPlaceholder(field)" />
             </div>
             <input type="submit" value="Envoyer">
         </form>

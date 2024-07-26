@@ -27,5 +27,5 @@ const updateValue = (event) => {
 </script>
 <template>
     <label :for="componentId">{{ label }}</label>
-    <textarea :id="componentId" :value="modelValue" @input="updateValue" :placeholder="placeholder"></textarea>
+    <input :id="componentId" type="number" :value="modelValue" @input="updateValue" :placeholder="placeholder"></input>
 </template>
